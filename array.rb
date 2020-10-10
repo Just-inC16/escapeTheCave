@@ -39,4 +39,4 @@ end
 a=[1,2,34,5]	
 puts a.map(2..4){|i|i.to_f}		
 puts a.map{|i|i.to_f}
-
+  
