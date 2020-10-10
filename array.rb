@@ -8,26 +8,27 @@ class Array
         #Check for index out of bounds
         if index > self.length-1 or index < self.length*-1
             return '\0'
-        else 
-            return self.values_at(index) 
+        else  
+            # print self.values_at(index)
+            # print self.values_at(index).class
+            # puts self.values_at(index).join
+            return self.values_at(index).join
         end
     end
     def map (seq="all")
          temp=[]
-         #Check for no sequence
+         #Check for no sequence; Print all
         if seq=="all"
-            #Print all
             i=0;
             while i < self.length
                 temp.append(yield(self[i]))
                 i=i+1
             end
-            return self
+            return temp
         end
-
         #Return the elements in sequence excluding out of bounds
         for i in seq
-            puts self[i]
+            #Check to see if not out of bounds
             if self[i]=='\0'
                 return temp
             end
@@ -36,7 +37,3 @@ class Array
         return temp
     end
 end
-a=[1,2,34,5]	
-puts a.map(2..4){|i|i.to_f}		
-puts a.map{|i|i.to_f}
-  
