@@ -128,14 +128,10 @@ class Room
     end
     #bi-directional connections 
     def neighbor(adjNeighbor)
-        # puts adjNeighbor
-        # puts "Hello"
-        # puts @@adjToRoom[self.number]
-        # puts "Bye"
         # puts @@adjToRoom[self.number][0]
         for i in 0...@@adjToRoom[self.number].length
             # puts @@adjToRoom[self.number].to_a[i]
-            if @@adjToRoom[self.number].to_a[i].number ==adjNeighbor
+            if @@adjToRoom[self.number].to_a[i].number == adjNeighbor
                 return @@adjToRoom[self.number].to_a[i]
             end
         end
@@ -151,7 +147,9 @@ class Room
     end 
     #Neighboring rooms are selected at random 
     def random_neighbor
+        puts @@adjToRoom[self.number]
         if @@adjToRoom[self.number]
+            puts @@adjToRoom[self.number].to_a.sample 
             return @@adjToRoom[self.number].to_a.sample 
         end 
     end
@@ -226,39 +224,3 @@ class Player
     end 
 end
 
-room =Room.new(12)
-puts room.number ==12 
-
-puts room.empty?
-room.add(:guard)
-room.add(:bats)
-puts room.empty?
-puts room.has?(:guard) 
-puts room.has?(:wall)
-room.remove(:bats)
-puts room.has?(:bats)
-
-exit_numbers = [11, 3, 7]
-exit_numbers.each { |i|
-    room.connect(Room.new(i))
-}
-puts room.allRoomSet
-# exit_numbers.each { |i|
-
-#     room.neighbor(i).number == i
-# room.neighbor(i).neighbor(room.number) == room
-# }
-puts "hello"
-x=room.exits 
-puts x
-puts x == exit_numbers
-puts exit_numbers.include?(room.random_neighbor.number)
-room.add(:guard)
-puts room.safe?
-room
-.random_neighbor
-.add(:bats)
-
-room.safe?
-room = Room.new(9)
-room.safe? 

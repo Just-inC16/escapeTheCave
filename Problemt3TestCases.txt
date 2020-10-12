@@ -1,0 +1,35 @@
+room =Room.new(12)
+exit_numbers = [11, 3, 7]
+# puts room.number ==12 
+
+# puts room.empty?
+# room.add(:guard)
+# room.add(:bats)
+# puts room.empty?
+# puts room.has?(:guard) 
+# puts room.has?(:wall)
+# room.remove(:bats)
+# puts room.has?(:bats)
+
+
+exit_numbers.each { |i|
+    room.connect(Room.new(i))
+}
+# puts room.allRoomSet
+# exit_numbers.each { |i|
+#     puts room.neighbor(i).number == i
+#     puts room.neighbor(i).neighbor(room.number) == room
+# }
+# puts "hello"
+
+# puts room.exits == exit_numbers
+#puts exit_numbers.include?(room.random_neighbor.number)
+#  room.add(:guard)
+
+# puts room.safe?
+# room
+# .random_neighbor
+# .add(:bats)
+# puts room.safe?
+# room = Room.new(9)
+# puts room.safe? 
