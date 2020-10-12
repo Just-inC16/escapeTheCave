@@ -38,5 +38,16 @@ puts b.map{|x|x[0].upcase+x[1,x.length]}
 puts " " 
 a = [1,2,3,nil,nil,nil,nil,10]
 puts a[3] # nil --> Empty string
+
+Part 2
+
 Valid 
 ./rgrep.rb -w test.txt road -c
+
+Invalid 
+./rgrep.rb test.txt -w -c -m road
+
+
+References 
+https://www.rubyguides.com/2019/07/ruby-string-concatenation/
+.class ==> check type
