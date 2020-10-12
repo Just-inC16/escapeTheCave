@@ -1,3 +1,4 @@
+require "set"
 class Room
     @@adjToRoom= []   #Determine if room i is adj to which other rooms
     @@hazardRoom= []  #Determine if room i has hazards 
@@ -15,7 +16,13 @@ class Room
     def roomAdj
         return @@adjToRoom[self.number]
     end
-
+    #Get the collection of all room sets
+    def allRoomSet
+        puts @@adjToRoom[self.number]
+        puts @@adjToRoom[11]
+        puts @@adjToRoom[3]
+        puts @@adjToRoom[7]
+    end
     #Get the hazards for that room
     def hazardRoom
         return @@hazardRoom[self.number]
@@ -32,7 +39,7 @@ class Room
 
     #Add hazards into a room
     def add(haze)
-        temp=[haze]
+        temp=Set.new([haze])
         #Nil arr = false
         if !@@hazardRoom[self.number]
             @@hazardRoom[self.number]=temp
@@ -40,12 +47,12 @@ class Room
             #Check whether haze exist
             i=0 
             while (i < @@hazardRoom[self.number].length)
-                if( @@hazardRoom[self.number][i]==haze)
+                if( @@hazardRoom[self.number].to_a[i]==haze)
                     return 
                 end
                 i+=1
             end
-            @@hazardRoom[self.number].append(haze)
+            @@hazardRoom[self.number].add(haze)
         end
         #puts @@hazardRoom[self.number]
     end
@@ -57,12 +64,16 @@ class Room
         if !hazardsInRoom
             return false 
         end
-        i=0
-        while i < hazardsInRoom.length
-            if(hazardsInRoom[i]==haze )
-                return true
-            end
-            i=i+1
+        # i=0
+        # while i < hazardsInRoom.length
+        #     if(hazardsInRoom[i]==haze )
+        #         return true
+        #     end
+        #     i=i+1
+        # end
+       # puts @@hazardRoom[self.number]
+        if @@hazardRoom[self.number].include?(haze)
+            return true
         end
         return false
     end
@@ -71,51 +82,49 @@ class Room
         hazardsInRoom= @@hazardRoom[self.number]
         #Return if hazard list is empty 
         if !hazardsInRoom
-            return false 
+            return  
         end
-        i=0
-        while i < hazardsInRoom.length
-            if(hazardsInRoom[i]==haze )
-                hazardsInRoom.delete(hazardsInRoom[i])
-                return
-            end
-            i=i+1
-        end
+        # i=0
+        # while i < hazardsInRoom.length
+        #     if(hazardsInRoom[i]==haze )
+        #         hazardsInRoom.delete(hazardsInRoom[i])
+        #         return
+        #     end
+        #     i=i+1
+        # end
+        hazardsInRoom.delete(haze)
         return 
     end
+    def connectBiDirectional(curr , neighbor)
+        puts @@adjToRoom[neighbor.number ]
+        if !@@adjToRoom[neighbor.number ]
+            @@adjToRoom[neighbor.number ]= Set.new([curr])
+        else 
+            @@adjToRoom[neighbor.number ].add(curr)
+        end
+    end 
     #Given the room, connect the  room
     def connect(room)
-        temp=[room] #room.number
+        temp=Set.new([room])#room.number
         #Nil arr = false
         if !@@adjToRoom[self.number]
             @@adjToRoom[self.number]=temp
             #Add connectivity to reciprocal  list 
-            if !@@adjToRoom[room]
-                @@adjToRoom[room]= [self.number]
-            else 
-                @@adjToRoom[room].append(self.number)
-            end
+            connectBiDirectional(self,room)
         else
             #Check whether room already connected
-            i=0 
-            while (i < @@adjToRoom[self.number].length)
-                if( @@adjToRoom[self.number][i]==room.number)
-                    return 
-                end
-                i+=1
-            end
-            @@adjToRoom[self.number].append(room) #room.number
+            # i=0 
+            # while (i < @@adjToRoom[self.number].length)
+            #     if( @@adjToRoom[self.number][i]==room.number)
+            #         return 
+            #     end
+            #     i+=1
+            # end
+            @@adjToRoom[self.number].add(room) #room.number
             #Add connectivity to reciprocal  list 
-            if !@@adjToRoom[room]
-                @@adjToRoom[room]= [self.number]
-            else 
-                @@adjToRoom[room].append(self.number)
-            end
+            connectBiDirectional(self,room)
         end
-        # for i in 0...3
-        #     puts @@adjToRoom[self.number][i]
-        # end
-    
+        # @@adjToRoom[self.number].each {|x| puts x.number}
     end
     #bi-directional connections 
     def neighbor(adjNeighbor)
@@ -124,10 +133,10 @@ class Room
         # puts @@adjToRoom[self.number]
         # puts "Bye"
         # puts @@adjToRoom[self.number][0]
-        for i in 0...@@adjToRoom[self.number]
-            puts @@adjToRoom[self.number][i]
-            if @@adjToRoom[self.number][i].number ==adjNeighbor
-                return @@adjToRoom[self.number][i]
+        for i in 0...@@adjToRoom[self.number].length
+            # puts @@adjToRoom[self.number].to_a[i]
+            if @@adjToRoom[self.number].to_a[i].number ==adjNeighbor
+                return @@adjToRoom[self.number].to_a[i]
             end
         end
     end 
@@ -135,26 +144,28 @@ class Room
     def exits
         extractNums= []
         for extract in 0...@@adjToRoom[self.number].length
-            extractNums.append(@@adjToRoom[self.number][extract].number)
-            puts @@adjToRoom[self.number][extract].number
+            extractNums.append(@@adjToRoom[self.number].to_a[extract].number)
+            puts @@adjToRoom[self.number].to_a[extract].number
         end
         return extractNums
     end 
     #Neighboring rooms are selected at random 
     def random_neighbor
-
+        if @@adjToRoom[self.number]
+            return @@adjToRoom[self.number].to_a.sample 
+        end 
     end
     #Safe if current and adjacent rooms are safe
     def safe?
         #Check the current room first 
         if !@@hazardRoom[self.number]
-            #Check adj rooms
+            #Check adj rooms; nil if empty 
             adj=@@adjToRoom[self.number] 
             #Check not nil
             if adj
                 for i in 0...adj.length
-                    #Return false if items exist inside
-                    if  @@hazardRoom[adj[i].number]
+                    #Return false if hazards exist inside
+                    if  @@hazardRoom[adj.to_a[i].number]
                         return false
                     end
                 end 
@@ -216,26 +227,38 @@ class Player
 end
 
 room =Room.new(12)
-#puts room.number ==12 
-# puts room.empty?
-# room.add(:guard)
-# room.add(:bats)
-# puts room.empty?
-# puts room.has?(:guard) 
-# puts room.has?(:wall)
-# room.remove(:bats)
-# puts room.has?(:bats)
-# exit_numbers = [11, 3, 7]
+puts room.number ==12 
 
-# exit_numbers.each { |i|
-#     room.connect(Room.new(i))
-# }
+puts room.empty?
+room.add(:guard)
+room.add(:bats)
+puts room.empty?
+puts room.has?(:guard) 
+puts room.has?(:wall)
+room.remove(:bats)
+puts room.has?(:bats)
+
+exit_numbers = [11, 3, 7]
+exit_numbers.each { |i|
+    room.connect(Room.new(i))
+}
+puts room.allRoomSet
 # exit_numbers.each { |i|
 
 #     room.neighbor(i).number == i
 # room.neighbor(i).neighbor(room.number) == room
-}
-#puts room.exits == exit_numbers
-#exit_numbers.include?(room.random_neighbor.number)
-# room.add(:guard)
-# puts room.safe?
+# }
+puts "hello"
+x=room.exits 
+puts x
+puts x == exit_numbers
+puts exit_numbers.include?(room.random_neighbor.number)
+room.add(:guard)
+puts room.safe?
+room
+.random_neighbor
+.add(:bats)
+
+room.safe?
+room = Room.new(9)
+room.safe? 
