@@ -2,7 +2,7 @@
 def wOption(params)
     len = params.length
     exp = Regexp.new(params[len-1])
-    exp = /\b#{params[len-1]}/
+    exp = /\b#{params[len-1]}\b/
     File.open(params[0] , "r") do |aFile|
         aFile.each_line {|line| puts line if line.match?(exp)}
     end
@@ -25,7 +25,7 @@ def wcOption(params)
     count=0
     len = params.length
     exp = Regexp.new(params[len-1])
-    exp = /\b#{params[len-1]}/
+    exp = /\b#{params[len-1]}\b/
     File.open(params[0] , "r") do |aFile|
         aFile.each_line {|line|  
             count+=1  if line.match?(exp)
@@ -58,10 +58,10 @@ end
 def wmOption(params)
     len = params.length
     exp = Regexp.new(params[len-1])
-    exp = /\b#{params[len-1]}/
+    exp = /\b#{params[len-1]}\b/
     File.open(params[0] , "r") do |aFile|
         aFile.each_line {|line|  
-            puts params[len-1]  if line.match?(exp)
+            puts params[len-1] if line.match?(exp)
         }
     end
 end 
