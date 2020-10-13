@@ -182,50 +182,54 @@ class Cave
     #Room numbering starts at 0-19; 
     #Each index contains a set of adj rooms 
     @@GeneralRooms= []
-
+    def initialize(caveStruct)
+        @@GeneralRooms=caveStruct
+    end 
     #Needs to become docecahedron structure
     def self.dodecahedron
+        #
+        @allTempRooms=[]
         #Room 1 - 2,5,8
-        @@GeneralRooms[0]=Set.new([2,5,8])
+        @allTempRooms[0]=Set.new([2,5,8])
         #Room 2 - 1,3,10
-        @@GeneralRooms[1]=Set.new([1,3,10])
+        @allTempRooms[1]=Set.new([1,3,10])
         #Room 3 - 2,4,12
-        @@GeneralRooms[2]=Set.new([2,4,12])
+        @allTempRooms[2]=Set.new([2,4,12])
         #Room 4 - 3,5,14
-        @@GeneralRooms[3]=Set.new([3,5,14])
+        @allTempRooms[3]=Set.new([3,5,14])
         #Room 5 - 1,4,6
-        @@GeneralRooms[4]=Set.new([1,4,6])
+        @allTempRooms[4]=Set.new([1,4,6])
         #Room 6 - 5,7,15
-        @@GeneralRooms[5]=Set.new([5,7,15])
+        @allTempRooms[5]=Set.new([5,7,15])
         #Room 7 - 6,8,17
-        @@GeneralRooms[6]=Set.new([6,8,17])
+        @allTempRooms[6]=Set.new([6,8,17])
         #Room 8 - 1,7,11
-        @@GeneralRooms[7]=Set.new([1,7,11])
+        @allTempRooms[7]=Set.new([1,7,11])
         #Room 9 - 10,12,19
-        @@GeneralRooms[8]=Set.new([10,12,19])
+        @allTempRooms[8]=Set.new([10,12,19])
         #Room 10 - 2,9,11
-        @@GeneralRooms[9]=Set.new([2,9,11])
+        @allTempRooms[9]=Set.new([2,9,11])
         #Room 11 - 8,10,20
-        @@GeneralRooms[10]=Set.new([8,10,20])
+        @allTempRooms[10]=Set.new([8,10,20])
         #Room 12 - 3,9,13
-        @@GeneralRooms[11]=Set.new([3,9,13])
+        @allTempRooms[11]=Set.new([3,9,13])
         #Room 13 - 12,14,18
-        @@GeneralRooms[12]=Set.new([12,14,18])
+        @allTempRooms[12]=Set.new([12,14,18])
         #Room 14 - 4,13,15
-        @@GeneralRooms[13]=Set.new([ 4,13,15])
+        @allTempRooms[13]=Set.new([ 4,13,15])
         #Room 15 - 6,14,16
-        @@GeneralRooms[14]=Set.new([6,14,16])
+        @allTempRooms[14]=Set.new([6,14,16])
         #Room 16 - 15,17,18
-        @@GeneralRooms[15]=Set.new([15,17,18])
+        @allTempRooms[15]=Set.new([15,17,18])
         #Room 17 - 7,16,20
-        @@GeneralRooms[16]=Set.new([7,16,20])
+        @allTempRooms[16]=Set.new([7,16,20])
         #Room 18 - 13,16,19
-        @@GeneralRooms[17]=Set.new([13,16,19])
+        @allTempRooms[17]=Set.new([13,16,19])
         #Room 19 - 9,18,20
-        @@GeneralRooms[18]=Set.new([9,18,20])
+        @allTempRooms[18]=Set.new([9,18,20])
         #Room 20 - 11,17,19
-        @@GeneralRooms[19]=Set.new([11,17,19])
-        return @@GeneralRooms
+        @allTempRooms[19]=Set.new([11,17,19])
+        return Cave.new(@allTempRooms)
     end
     #i cave.room(i)
     def room(specificRoom)
@@ -234,7 +238,7 @@ class Cave
     #Select room randomly 
     #https://ruby-doc.org/core-2.4.1/Array.html#method-i-sample
     def random_room
-        puts  "hello mother feker"
+        puts  (0...20).sample
 
     end
     #Hazards can move to different rooms  
@@ -273,9 +277,10 @@ class Player
     def act(action, room)
     end 
 end
-# cave =Cave.dodecahedron
-# puts cave
-# # cave =Cave.entrance
+cave =Cave.dodecahedron
+puts cave
+
+# cave =Cave.entrance
 # puts cave.random_room
-player= Player.new
-player.explore_room
+# player= Player.new
+# player.explore_room
