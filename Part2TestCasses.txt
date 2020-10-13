@@ -1,0 +1,15 @@
+./rgrep.rb
+./rgrep.rb test.txt
+./rgrep.rb test.txt -f
+./rgrep.rb test.txt -v -m '\d'
+./rgrep.rb test.txt -w road
+./rgrep.rb test.txt -w -m road
+./rgrep.rb test.txt -w -c road
+./rgrep.rb test.txt -p '\d\d'
+./rgrep.rb test.txt -p -c '\d\d'
+./rgrep.rb test.txt -v '^\d\d'
+./rgrep.rb test.txt -v -c '^\d\d'
+./rgrep.rb test.txt '\d\d'
+
+
+
