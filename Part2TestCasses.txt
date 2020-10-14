@@ -12,4 +12,10 @@
 ./rgrep.rb test.txt '\d\d'
 
 
-
+./rgrep.rb test.txt -p '-r'
+./rgrep.rb -n road
+./rgrep.rb test.txt -n
+./rgrep.rb test.txt -m
+ruby rgrep.rb test.txt -w -m road
+rgrep.rb file.txt -w p
+rgrep.rb file.txt -k -w p

@@ -181,13 +181,12 @@ end
 class Cave
     #Room numbering starts at 0-19; 
     #Each index contains a set of adj rooms 
-    @@GeneralRooms= []
+    @@GeneralRooms=[]
     def initialize(caveStruct)
         @@GeneralRooms=caveStruct
     end 
     #Needs to become docecahedron structure
     def self.dodecahedron
-        #
         @allTempRooms=[]
         #Room 1 - 2,5,8
         @allTempRooms[0]=Set.new([2,5,8])
@@ -242,18 +241,18 @@ class Cave
 
     end
     #Hazards can move to different rooms  
-    def self.move(action, prevRoom, newRoom)
+    def move(action, prevRoom, newRoom)
         puts "Fello"
     end
     #Add hazard  
-    def self.move(hazard, room)
+    def add_hazard(hazard, room)
     end
     #Look for room based on hazard  
-    def self.room_with(hazard)
+    def room_with(hazard)
         puts "Fello"
     end
     #A safe entrance is located 
-    def self.entrance
+    def entrance
         puts "Fello"
     end 
 end
@@ -269,11 +268,13 @@ class Player
     #Player's action 
     def action(playerAction)
     end
-    #Determine if the hazard is encountered  
+    #Enter a new room
     def enter(room)
     end   
+    #Determine if the hazard is encountered  
     def explore_room
     end 
+    #Perform an action 
     def act(action, room)
     end 
 end

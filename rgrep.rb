@@ -66,12 +66,17 @@ def wmOption(params)
     end
 end 
 def pmOption(params)
+    # count =1
     len =params.length
     exp =Regexp.new(params[len-1])
     File.open(params[0], "r") do |aFile|
         aFile.each_line{|line| 
             puts "#{$&}" if line =~exp    
-               
+                # print "Match "
+                # puts count 
+                # puts "#{$}<<#{$&}>>#{$'}" 
+                # count +=1
+            
         }
     end
 end 
@@ -107,9 +112,16 @@ if params.length ==0 or params.length == 1
 else 
     #Check if no options (default -p)
     if params.length == 2
-        #Check if options with filename or option with pattern(len,'-', match regexp)
+        #Check if options with filename or option with pattern(len,'-', match regexp) ==> Invalid option -f 
         if (params[1].length==2 and params[1][0]=='-' and params[1] !~ /\-[wpvcm]/)
             puts "Invalid option" 
+        elsif (params[0].length==2 and params[0][0]=='-' and params[0] !~ /\-[wpvcm]/)
+            puts "Invalid option" 
+        #Option at beggining/end
+        elsif (params[0].length==2 and params[0][0]=='-' and params[0] =~ /\-[wpvcm]/)
+            puts "Missing required arguments" 
+        elsif (params[1].length==2 and params[1][0]=='-' and params[1] =~ /\-[wpvcm]/)
+            puts "Missing required arguments" 
         else 
             pOption(params)
         end 
