@@ -9,9 +9,6 @@ class Array
         if index > self.length-1 or index < self.length*-1
             return '\0'
         else  
-            # print self.values_at(index)
-            # print self.values_at(index).class
-            # puts self.values_at(index).join
             return self.values_at(index).join
         end
     end
@@ -37,3 +34,24 @@ class Array
         return temp
     end
 end
+
+#puts b.map(0) {|x|x}
+
+# a = [1,2,3,4,5]
+# b = a.map(2..4){|x| x * 2}
+# puts b
+# b = a.map(-5...-3){|x| x * 2}
+# puts b
+# b = a.map(-10..10){|x| x * 2}
+# puts b
+# b = a.map(2..1){|x| x * 2}
+# puts b
+# b = a.map('a'..'z'){|x| x * 2}
+# puts b
+# b = a.map('pie'){|x| x * 2}
+# puts b
+# b = a.map(5){|x| x * 2}
+# puts b
+a=[1,2,3,4,5]
+b=a.map
+puts b

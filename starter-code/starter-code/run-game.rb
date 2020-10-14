@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
 require_relative "./treasure-hunt.rb"
-
+require_relative "./hunt-treasure.rb"
 # For testing, but also for restoring a world with the same conditions
 srand(ARGV[0].to_i) if ARGV[0]
 
 # World setup
-
 cave = Cave.dodecahedron
 
 cave.add_hazard(:guard, 1)

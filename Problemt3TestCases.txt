@@ -33,3 +33,53 @@ exit_numbers.each { |i|
 # puts room.safe?
 # room = Room.new(9)
 # puts room.safe? 
+
+
+
+
+10/14
+# cave =Cave.dodecahedron
+# Create room
+# room =Room.new(12)
+# room.add(:guard)
+# cave.move(:guard,12,5)
+# puts cave.entrance
+# x=@@ListOfRooms[11]
+# y=@@ListOfRooms[10]
+# x.add(:bats)
+
+# puts cave.random_room
+# player= Player.new
+# player.explore_room
+
+# cave = Cave.dodecahedron
+# rooms = (1..20).map { |i| cave.room(i)}
+# rooms.each do |room|
+#  room.neighbor.count == 3
+#  room.neighbor.each { |i|
+# i.neighbors.include?(room) == true
+#  }
+# end
+
+#Sense/Encounter
+# Create room
+# room =Room.new(12)
+# #Add hazards 
+# room.add(:guard)
+# room.add(:bats)
+# exit_numbers = [11, 3, 7]
+# exit_numbers.each { |i|
+#     x=Room.new(i)
+#     if i ==7
+#         x.add(:Pizza)
+#     end
+#     room.connect(x)
+    
+# }
+
+#  player = Player.new
+# # puts player.sense(:Pizza)
+# puts player.encounter(:bats)
+# player.enter(Room.new(13))
+# puts player.encounter(:bats)
+# player.action(:move)

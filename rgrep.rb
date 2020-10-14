@@ -71,12 +71,7 @@ def pmOption(params)
     exp =Regexp.new(params[len-1])
     File.open(params[0], "r") do |aFile|
         aFile.each_line{|line| 
-            puts "#{$&}" if line =~exp    
-                # print "Match "
-                # puts count 
-                # puts "#{$}<<#{$&}>>#{$'}" 
-                # count +=1
-            
+            puts "#{$&}" if line =~exp       
         }
     end
 end 
@@ -154,11 +149,18 @@ else
             options=params[1]+params[2]
             sortOpt=options.split('').sort
             #Check for - and options to variables 
-            if (sortOpt[0]=='-' and sortOpt[1]=='-' )
-                #Assign to variables 
-                opt1 = sortOpt[2]
-                opt2 = sortOpt[3]
-                combinationOfOpt(params, opt1, opt2)
+            if (sortOpt[0]=='-' and sortOpt[1]=='-' && sortOpt.length==4)
+                if(params[1]!~ /\-[wpvcm]/ or params[2]!~ /\-[wpvcm]/)
+                    puts "Invalid option"
+                
+                else
+                    #Assign to variables 
+                    opt1 = sortOpt[2]
+                    opt2 = sortOpt[3]
+                    combinationOfOpt(params, opt1, opt2)
+                end
+            else 
+                puts "Invalid combination of options"
             end
         end
     end 

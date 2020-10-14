@@ -1,0 +1,21 @@
+# case mSIAction
+#     when ":move" then enter(room)
+#     when ":shoot"
+# end 
+#Get the collection of all room sets
+    def allRoomSet
+        puts @@adjToRoom[self.number]
+        puts @@adjToRoom[11]
+        puts @@adjToRoom[3]
+        puts @@adjToRoom[7]
+    end
+
+
+    #Check whether haze exist
+            # i=0 
+            # while (i < @@hazardRoom[self.number].length)
+            #     if( @@hazardRoom[self.number].to_a[i]==haze)
+            #         return 
+            #     end
+            #     i+=1
+            # end
