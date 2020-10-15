@@ -19,3 +19,21 @@
             #     end
             #     i+=1
             # end
+
+
+            # #check for positive out of bounds
+                # if (pos.at(0) > arrLen)
+                #     return '\0'
+                # #Check for negative out of bounds
+                # elsif ( pos.at(0) < (arrLen)*-1)
+                #     return '\0'
+                # else
+                #     for i in seq
+                #         #Check to see if not out of bounds
+                #         if self[i]=='\0'
+                #             return temp
+                #         end
+                #         temp.append(yield(self[i]))
+                #     end
+                #     return temp  
+                # end

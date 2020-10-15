@@ -79,14 +79,3 @@ class Array
    end
 end
 
-b	=	["cat","bat","mat","sat"]
-# puts b.map(0) {|x|x}.class
-
-
-a=[1,2,3,4,5]
-b = a.map
-puts b
-puts [1,2,3,4,5].map {|n| n*n}
-# a=[1,2,3,4,5]
-# puts a[3]
-# puts a[3].class

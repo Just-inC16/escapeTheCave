@@ -51,3 +51,64 @@ Invalid
 References 
 https://www.rubyguides.com/2019/07/ruby-string-concatenation/
 .class ==> check type
+
+
+# a= [1,2,3,4,5]
+# b=["cat","bat","mat","sat"]
+# puts a[1]
+# puts " "
+# puts a[10]	
+# puts " "
+# puts b[-1]
+# puts " "
+# puts b[5]
+# puts a[1..30]
+# puts "hello"
+# puts a[1..-1]
+# puts "ff "
+# puts a[-10..10].class
+# puts " "
+# puts a[-1..-4].class
+# puts " "
+# x=a.length+1
+# x1=a.length*-1-1
+# puts x
+# puts "a "
+# puts a[x..10].class
+# puts " b"
+# puts a[x1..100000].class
+# puts " c"
+# puts a[10..10].class
+# puts " d"
+# puts a[x..40].class
+# puts " e"
+# puts a[(x1+1)..100000].class
+# puts a[-10]
+# puts a[2]
+# puts a[10]
+# puts a[1..30]
+# puts a[1..30].class
+# puts 123
+# puts a[1..-1]
+# puts a[1..-1].class
+# puts a[-1..-4]
+# puts a[-1..-4].class
+# puts a[-10..10]
+# puts a[-10..10].class
+# puts a[6].class
+# b=[]
+# puts a[2]
+# puts a[2].class
+
+# puts a[9]
+# puts a[9].class
+
+# puts a[3..1]
+# # puts a[1..3].class
+
+# puts b[2]
+# puts b[2].class
+# b	=	["cat","bat","mat","sat"]
+# puts b[-1]
+# puts b[-1].class
+
