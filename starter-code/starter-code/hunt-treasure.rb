@@ -51,9 +51,9 @@ class Room
     #Determine if a hazard exist in a room
     def has?(haze)
         #Return F if hazard list is empty 
-        # if !hazardRoom
-        #     return false 
-        # end
+        if !hazardRoom
+            return false 
+        end
         if hazardRoom.include?(haze)
             return true
         end
@@ -236,7 +236,10 @@ class Cave
         return Cave.new(@@adjToRoom)
     end
     #Return instance of room
-    def roomInstance(specificRoom)
+    def self.roomInstance(specificRoom)
+        return @@ListOfRooms[specificRoom]
+    end 
+    def roomInstance2(specificRoom)
         return @@ListOfRooms[specificRoom]
     end 
     #Select room randomly 
@@ -245,16 +248,16 @@ class Cave
         rooms= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
         #Obtain sample from 0 index
         chosenOne = rooms.sample(1)[0]  
-        return roomInstance(chosenOne)
+        return roomInstance2(chosenOne)
     end
     #Remove action from curr and add to new
-    def move(action, currRoom, newRoom)
+    def self.move(action, currRoom, newRoom)
         aCurRoomPos=currRoom-1
         aCurRoomPos=newRoom-1
         #Find the class instance of currRoom
-        findCurrentRoom=roomInstance(aCurRoomPos)
+        findCurrentRoom=roomInstance2(aCurRoomPos)
         #Find the class instance of newRoom
-        findNewRoom=roomInstance(aCurRoomPos)
+        findNewRoom=roomInstance2(aCurRoomPos)
 
         findCurrentRoom.remove(action)
         findNewRoom.add(action)
@@ -264,7 +267,7 @@ class Cave
     def add_hazard(hazard, room)
         actualRoomIndex= room-1 
         #Find Room Instance
-        roomToBeAdded = roomInstance(actualRoomIndex)
+        roomToBeAdded = roomInstance2(actualRoomIndex)
         #Call Room.add(haze)
         roomToBeAdded.add(hazard)
     end
@@ -272,7 +275,7 @@ class Cave
     def room_with(hazard)
         roomHazard= []
         for room in 0..20
-            checkRoom= roomInstance(room)
+            checkRoom= roomInstance2(room)
             if checkRoom.has?(hazard)
                 #Add instances to array
                 roomHazard.append(checkRoom)
@@ -296,39 +299,35 @@ end
 class Player
     @@currentRoom=0
     #Getter for current number 
-    def currRoomNumber
+    def currRoomNum
         return @@currentRoom
+    end
+    #Setter for current number 
+    def setCurrRoomNumber(newRoom)
+        @@currentRoom=newRoom
     end
     def self.setCurrentRoom(currRoom)
         @@currentRoom=currRoom
     end
     #Determine if the hazard exist 
     def sense(hazard)
-   
+        #Obtain instance of current room
+        roomInstance=Cave.roomInstance(currRoomNum)
         #Return the adj rooms 
-        rooms = currRoomNumber.roomAdj.to_a
-        
-        #Check whether the current that the player is in 
-        #have any hazards 
-        if !currRoomNumber.has?(hazard)
-            #Return false if there are no adj rooms
-            if (currRoomNumber.nil?)
-                return false 
-            end
-            #Check whether any of the adj ones have it 
-            for chkAdjForH in 0...currRoomNumber.length
-                # puts "Room #{rooms[chkAdjForH].number}"
-               
-                adjRoom=  rooms[chkAdjForH]
-                # puts adjRoom 
-                # puts adjRoom.class
-                #Check the adj's currRoomNumber is nil
-                if !adjRoom.nil?
-                    if  adjRoom.has?(hazard)
-                        # puts "Room #{rooms[chkAdjForH].number} is the winner"
+        rooms = roomInstance.roomAdj.to_a
+        #Check current room for hazards 
+        if !roomInstance.has?(hazard)
+            #Return T if array exist;otherwise false
+            if !(rooms.nil?)
+                #Check whether any of the adj ones have it 
+                rooms.each {|adjRoom|
+                    # roomAdj= rooms[adjRoom]
+                    if !adjRoom.nil? and adjRoom.has?(hazard)
                         return true
                     end 
-                end
+                }
+            else
+                return false 
             end
         else
             return true
@@ -348,7 +347,7 @@ class Player
     #Hazard encountered? 
     def encounter(hazard)
         #Obtain the hazards in that room stored as Set 
-        hazerooms = Room.hazardRoom[currRoomNumber-1]
+        hazerooms = Room.hazardRoom[currRoomNum-1]
         #No hazards in Room
         if !hazerooms
             return false 
@@ -356,7 +355,6 @@ class Player
         #Check whether 'hazard' exist
         checkPlayerHazard(hazerooms, hazard)
     end
-
     #Enter a new room instance 
     def enter(room) 
         #Set the current room to the new current room
@@ -367,14 +365,33 @@ class Player
         @@fromRoomAdjToRoom=Room.adjToRoom
         @@fromRoomHazardRoom=Room.hazardRoom
     end 
-    def move
+    def move(room)
+        setCurrRoomNumber(room)
     end 
-    def shoot 
+    def shoot (room)
+        if setCurrRoomNumber(room).has?(:guard)
+            return true
+        else 
+            return false 
+        end
     end 
-    def startle_guard
+    def startle_guard(room)
+        #1= Stay; 2 = Move 
+        options= [1,2]
+        choice = options.sample(1)[0]  
+        if choice == 2 
+            adjRooms = room.hazardRoom 
+            chosenRoom = adjRooms.to_a.sample(1)[0] 
+
+            Cave.move(:move, room, Cave.roomInstance(chosenRoom))
+        end 
     end
     # Perform an action 
-    def act(mSIAction, room)
-        
+    def act(action, room)
+        case action.to_s
+            when "move" then return move(room)
+            when "shoot" then return shoot(room)	
+            when "startle_guard" then return startle_guard(room)
+        end
     end 
 end
