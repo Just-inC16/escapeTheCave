@@ -90,3 +90,4 @@ narrator.tell_story do
   console.show_room_description
   console.ask_player_to_act
 end
+
