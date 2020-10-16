@@ -46,7 +46,7 @@ player.encounter(:bats) do
 
   player.enter(new_room)
 
-  cave.move(:bats, from: old_room, to: new_room)
+  cave.move(:bats, old_room,  new_room)
 end
 
 player.encounter(:pit) do
