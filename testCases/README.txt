@@ -39,7 +39,22 @@ puts " "
 a = [1,2,3,nil,nil,nil,nil,10]
 puts a[3] # nil --> Empty string
 
-Part 2
+a = [1,2,3,4,5]
+puts a.map(2..4){|x| x * 2}.class
+puts " "
+puts a.map(-5...-3){|x| x * 2}.class
+puts " "
+puts a.map(-10..10){|x| x * 2}.class
+puts " "
+puts a.map(2..1){|x| x * 2}.class
+puts " "
+# puts a.map('a'..'z') {|x| x * 2}
+# puts " "
+# puts a.map('pie'){|x| x * 2}
+# puts " "
+# puts a.map("a") {|x| x * 2}
+
+******************Part 2********************************************************************
 
 Valid 
 ./rgrep.rb -w test.txt road -c
@@ -111,4 +126,58 @@ https://www.rubyguides.com/2019/07/ruby-string-concatenation/
 # b	=	["cat","bat","mat","sat"]
 # puts b[-1]
 # puts b[-1].class
+
+
+m
+1
+m
+8
+m
+11
+m
+10
+m
+2
+m
+3
+m
+4
+m
+5
+m
+6
+m
+7
+m
+8
+m
+7
+m
+17
+m
+20
+m
+19
+m
+9
+m
+12
+m
+13
+m
+14
+m
+15
+m
+16
+m
+18
+m
+19
+m
+20
+m
+11
+
+
 
