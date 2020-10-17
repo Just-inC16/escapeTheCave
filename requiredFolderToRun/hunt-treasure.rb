@@ -304,6 +304,11 @@ class Cave
         end
         
     end
+    #****************No Random Rooms*******************
+    def add_hazardTemp(hazard, numOfRooms)
+        puts "#{hazard}; Room number #{room(numOfRooms).number}"
+        room(numOfRooms).add(hazard)
+    end
     #Look for room based on hazard  
     def room_with(hazard)
         for r in 0...20
@@ -360,16 +365,22 @@ class Player
     end
     
     def senseCallee(hazard)
-        # puts "Hello"
-        puts room.number
-        puts room.neighbors.each {|r| puts r.number}
+        puts "Hazard #{hazard} "
+        # puts "Room #{room.number}"
+        # room.neighbors.each {|r| puts r.number}
         if !room.has?(hazard)
             room.neighbors.each {|oneAdjRoom|
+                # puts "Is it here?"
+                puts "Rooms #{oneAdjRoom.number}"
+                
                 if !oneAdjRoom.nil? and oneAdjRoom.has?(hazard)
                     return true
                 end 
+
             }
+
             return false
+            exit()
         else
             return true
         end
@@ -383,7 +394,6 @@ class Player
     end
     #Return T if encountered and F if not encountered 
     def checkPlayerHazard(hazardRoom, hazard) 
-        puts "hazardRoom"
         for haze  in 0...hazardRoom.length
             if hazard == hazardRoom.to_a[haze]
                 return true
@@ -406,7 +416,7 @@ class Player
     #Hazard encountered? 
     def encounter(hazard, &block)
         @@blockEncounters.push(block)
-        puts @@blockEncounters
+        # puts @@blockEncounters
         encounterCallee(hazard)
     end
     #Enter a new room instance 
@@ -419,41 +429,7 @@ class Player
     end   
     #Does hazard exist nearby?
     def explore_room
-        #Sensing 
-        # senses=[:bats,:guards,:pits]
-        # senses.each do |sense|
-        #     puts sense 
-        #     puts senseCallee(sense)
-        #     if senseCallee(sense)
-        #         location=senses.find_index(sense)
-        #         puts location
-        #         @@blockEncounters[location].call()
-        #     end
-        # end
-        #[guards , pits , bats ]
-        puts "Bats #{senseCallee(:bats)}"
-        puts "Guards #{senseCallee(:guards)}"
-        puts "Pits #{senseCallee(:pits)}" 
-        if senseCallee(:bats)
-            puts "Hello"
-            puts @@blockSenses[0].call()#.to_a[1]
-        end
-        if senseCallee(:guards)
-            puts @@blockSenses[1].call()
-        end
-        if senseCallee(:pits)
-            puts @@blockSenses[2].call()
-        end       
         
-       
-            
-        # if senseCallee(:bats)
-        #     @@blockEncounters[2].call()
-        # elsif senseCallee(:guards)
-        #     @@blockEncounters[0].call()
-        # else senseCallee(:pits)
-        #     @@blockEncounters[1].call()
-        # end  
         # #Encounters 
         # if senseCallee(:guards)
         #     @@blockSenses[0].call()
@@ -461,7 +437,26 @@ class Player
         #     @@blockSenses[1].call()
         # else senseCallee(:pits)
         #     @@blockSenses[2].call()
-        # end   
+        # end  
+         #Sensing 
+        # puts "Bats #{senseCallee(:bats)} "
+        # puts ""
+        # puts "Guards #{senseCallee(:guards)}"
+        # puts ""
+        # # require 'debug'
+        # puts "Pits #{senseCallee(:pit)}" 
+        # puts ""
+        if senseCallee(:bats)
+            puts @@blockSenses[0].call()#.to_a[1]
+        end
+        if senseCallee(:guard)
+            puts @@blockSenses[1].call()
+        end
+        if senseCallee(:pit)
+            puts @@blockSenses[2].call()
+        end       
+        
+        
     end 
     def move(room)
         puts "Moving function #{room.number}"
@@ -588,10 +583,19 @@ cave = Cave.dodecahedron
 # cave.move(:pit, room, new_room)
 # puts room.has?(:pit) == false
 # puts new_room.has?(:pit) == true
+# puts"**************Adj rooms "
+# puts Room.adjToRoom
+# puts"**************Hazard rooms "
+# puts Room.hazardRoom
+# puts "Add hazards "
+cave.add_hazardTemp(:bats, 2)
+cave.add_hazardTemp(:pit, 5)
+cave.add_hazardTemp(:guard, 8)
 
-cave.add_hazard(:guard, 1)
-cave.add_hazard(:pit, 3)
-cave.add_hazard(:bats, 3)
+# cave.add_hazard(:guard, 1)
+# cave.add_hazard(:pit, 3)
+# cave.add_hazard(:bats, 3)
+
 # for i in 1..20
 #     x= Room.new(i)
 #     puts "Room # #{i}: "
@@ -662,7 +666,6 @@ end
 # end
 
 player.enter(empty_room)
-puts player.getRoom
 
 player.explore_room
 exit()
