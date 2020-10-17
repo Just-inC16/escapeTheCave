@@ -269,7 +269,7 @@ class Cave
         rooms= [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         #Obtain sample from 0 index
         chosenOne = rooms.sample(1)[0]  
-        puts "Random Room Number  #{room(chosenOne)}"
+        # puts "Random Room Number  #{room(chosenOne).number}"
         return room(chosenOne)
     end
     #Remove action from curr and add to new
@@ -323,7 +323,7 @@ class Cave
         loop do 
             #Obtain a random room number
             randRoom=random_room
-            puts "Entrance #{randRoom.number}"
+            # puts "Entrance #{randRoom.number}"
             if randRoom.safe?
                 #Set randRoom to Player's starting room
                 # puts "Justin chan #{randRoom.number}"
@@ -335,8 +335,16 @@ class Cave
 end
 class Player
     @@currentRoom=1
-    @@blockSenses =[]
+    #Store Callbacks for sensing obstacles 
+    # Index 0: bats  ,   Index 1: guard   ,Index 2: pit
+    @@blockSenses =[]  
+    #Store Callbacks for encountering obstacles
+     # Index 0: guard  ,   Index 1: bats   ,Index 2: pit
     @@blockEncounters=[]
+    #Store Callbacks for actions
+     # Index 0: move  ,   Index 1: shoot   ,Index 2: startle_guard
+    @@blockActions =[]
+
     #Getter for current number 
     def room
         # puts "Player Room #{@@currentRoom}"
@@ -365,13 +373,13 @@ class Player
     end
     
     def senseCallee(hazard)
-        puts "Hazard #{hazard} "
+        # puts "Hazard #{hazard} "
         # puts "Room #{room.number}"
         # room.neighbors.each {|r| puts r.number}
         if !room.has?(hazard)
             room.neighbors.each {|oneAdjRoom|
                 # puts "Is it here?"
-                puts "Rooms #{oneAdjRoom.number}"
+                # puts "Rooms #{oneAdjRoom.number}"
                 
                 if !oneAdjRoom.nil? and oneAdjRoom.has?(hazard)
                     return true
@@ -404,8 +412,6 @@ class Player
     def encounterCallee(hazard )
         #Obtain the hazards in that room stored as Set 
         hazerooms = room.hazardRoom
-        puts"hazardRoom #{hazerooms.to_a[0]}"
-        puts"hazardRoom #{hazerooms.to_s}"
         #No hazards in Room
         if !hazerooms
             return false 
@@ -421,263 +427,63 @@ class Player
     end
     #Enter a new room instance 
     def enter(room) 
-        puts "Enter #{room.number}"
+        # puts "Enter #{room.number}"
         #Set the current room to the new current room
         setCurrRoomNumber(room.number)
         # puts getRoom
         
     end   
     #Does hazard exist nearby?
-    def explore_room
-        
-        # #Encounters 
-        # if senseCallee(:guards)
-        #     @@blockSenses[0].call()
-        # elsif senseCallee(:bats)
-        #     @@blockSenses[1].call()
-        # else senseCallee(:pits)
-        #     @@blockSenses[2].call()
-        # end  
-         #Sensing 
-        # puts "Bats #{senseCallee(:bats)} "
-        # puts ""
-        # puts "Guards #{senseCallee(:guards)}"
-        # puts ""
-        # # require 'debug'
-        # puts "Pits #{senseCallee(:pit)}" 
-        # puts ""
+    def explore_room 
+        # Encounters 
+        if (encounterCallee(:guard) or encounterCallee(:pit) or  encounterCallee(:bats) )
+            if encounterCallee(:guard) 
+                @@blockEncounters[0].call()
+            end
+            if encounterCallee(:pit)  
+                @@blockEncounters[2].call()
+            end
+            if encounterCallee(:bats)  
+                @@blockEncounters[1].call()
+            end
+        end
         if senseCallee(:bats)
-            puts @@blockSenses[0].call()#.to_a[1]
+            @@blockSenses[0].call()#.to_a[1]
         end
         if senseCallee(:guard)
-            puts @@blockSenses[1].call()
+            @@blockSenses[1].call()
         end
         if senseCallee(:pit)
-            puts @@blockSenses[2].call()
+            @@blockSenses[2].call()
         end       
-        
-        
-    end 
-    def move(room)
-        puts "Moving function #{room.number}"
-        setCurrRoomNumber(room.number)
-    end 
-    def shoot (room)
-        # puts "Shooting #{room.number}"
 
-        if Cave.roomInstance(room.number).has?(:guard)
-            return true
-        else 
-            return false 
-        end
     end 
-    def startle_guard(adjGuardToRoom)
-        # puts adjGuardToRoom.class
-        #1= Stay; 2 = Move 
-        options= [1,2]
-        choice = options.sample(1)[0]  
-        if choice == 2 
-            chosenRoom = Room.adjRooms[adjGuardToRoom-1].sample(1)[0] 
-            Cave.move(:move, adjGuardToRoom, Cave.roomInstance(chosenRoom))
+    def executeActions(playerAction) 
+        if (playerAction.to_s=="move")
+            puts "Chicken"
         end 
     end
     #Player's action 
-    def action(playerAction)
-        if (playerAction.to_s=="move" or playerAction.to_s=="shoot" or playerAction.to_s=="startle_guard" )
-            return true
-        end
-        return false 
+    def action(playerAction, &block)
+        # if (playerAction.to_s=="move" or playerAction.to_s=="shoot" or playerAction.to_s=="startle_guard" )
+        #     return true
+        # end
+        # return false 
+        @@blockActions.append(block)
     end 
-    # Perform an action 
+    def move(room)
+        # puts "Moving function #{room.number}"
+        setCurrRoomNumber(room.number)
+    end 
+    # Have the player act 
     def act(action, room)
-        case action.to_s
-            when "move" then return move(room)
-            when "shoot" then return shoot(room)	
-            when "startle_guard" then return startle_guard(room)
+        # case action.to_s
+        #     when "move" then return move(room)
+        #     when "shoot" then return shoot(room)	
+        #     when "startle_guard" then return startle_guard(room)
+        # end
+        if action.to_s == "move"
+            move(room)
         end
     end 
 end
-# room = Room.new(12)
-# room.number == 12
-#  room.empty?
-# room.add(:guard)
-# room.add(:bats)
-#  room.empty?
-#  puts "Guardys"
-# puts room.has?(:guard) 
-# puts room.has?(:wall)
-# room.remove(:bats)
-# puts room.has?(:bats)
-
-# exit_numbers = [11, 3, 7]
-# exit_numbers.each { |i|
-#     room.connect(Room.new(i))
-# }
-# for i in 1..20
-#     x= Room.new(i)
-#      "Room # #{i}:"
-#      x.roomAdj
-#   end
-# #  room.allRoomSet
-# exit_numbers.each { |i|
-#      room.neighbor(i).number == i
-#      room.neighbor(i).neighbor(room.number) == room
-# }
-#  "hello"
-
-#  room.exits == exit_numbers
-#  exit_numbers.include?(room.random_neighbor.number)
-#  room.add(:guard)
-
-#  room.safe?
-# room
-# .random_neighbor
-# .add(:bats)
-#  room.safe?
-# room = Room.new(9)
-#  room.safe? 
-
-# player = Player.new
-# empty_room = Room.new(1)
-# guard_room = Room.new(2)
-# bats_room = Room.new(3)
-# room4 = Room.new(4)
-# sensed = Set.new
-# encountered = Set.new
-# empty_room.connect(guard_room)
-# empty_room.connect(bats_room)
-# player.sense(:bats) do
-#  sensed.add("You hear a rustling")
-# end
-# player.sense(:guard) do
-#  sensed.add("You smell something terrible")
-# end
-# player.encounter(:guard) do
-#  encountered.add("The guard killed you")
-# end
-# player.encounter(:bats) do
-#  encountered.add("The bats whisked you away")
-# end
-# player.action(:move) do |destination|
-#  player.enter(destination)
-# # end
-cave = Cave.dodecahedron
-# rooms = (1..20).map { |i| cave.room(i)}
-
-# rooms.each do |room|
-#     # puts "Room #{room.number}"
-#     puts room.neighbors.count == 3
-#     room.neighbors.each { |i|
-#         # puts "Does neighbors include rooms?"
-#         i.neighbors.include?(room) == true
-# }
-# end
-# room = cave.random_room
-# puts "Hello #{room.number}"
-# new_room = room.neighbors[1]
-# puts "Hello2 #{new_room.number}"
-# puts new_room.number
-
-# puts room.has?(:pit) == true
-# puts new_room.has?(:pit) == false
-# cave.move(:pit, room, new_room)
-# puts room.has?(:pit) == false
-# puts new_room.has?(:pit) == true
-# puts"**************Adj rooms "
-# puts Room.adjToRoom
-# puts"**************Hazard rooms "
-# puts Room.hazardRoom
-# puts "Add hazards "
-cave.add_hazardTemp(:bats, 2)
-cave.add_hazardTemp(:pit, 5)
-cave.add_hazardTemp(:guard, 8)
-
-# cave.add_hazard(:guard, 1)
-# cave.add_hazard(:pit, 3)
-# cave.add_hazard(:bats, 3)
-
-# for i in 1..20
-#     x= Room.new(i)
-#     puts "Room # #{i}: "
-#     puts x.hazardRoom
-# end
-# rooms_with_bats = rooms.select { |e|
-#     # puts "Room #{e.number }: #{e.has?(:bats)}"
-#     e.has?(:bats)
-# }
-# puts rooms_with_bats.count == 3
-
-# cave.add_hazard(:guard, 1)
-# puts cave.room_with(:guard).has?(:guard) == true
-
-# cave.add_hazard(:guard, 1)
-# cave.add_hazard(:pit, 3)
-# cave.add_hazard(:bats, 3)
-# entrance = cave.entrance
-# puts entrance.number
-# puts entrance.safe? == true
-
-
-player = Player.new
-empty_room = Room.new(1)
-guard_room = Room.new(2)
-bats_room = Room.new(3)
-room4 = Room.new(4)
-
-sensed = Set.new
-encountered = Set.new
-empty_room.connect(guard_room)
-empty_room.connect(bats_room)
-narrator  = Narrator.new
-# for i in 1..20
-#     x= Room.new(i)
-#     puts "Room # #{i}: "
-#     puts x.roomAdj
-# end
-player.sense(:bats) do
-    narrator.say("You hear a rustling sound nearby")
-  end
-  
-  player.sense(:guard) do
-    narrator.say("You smell something terrible nearby")
-  end
-  
-  player.sense(:pit) do
-    narrator.say("You feel a cold wind blowing from a nearby cavern.")
-  end
-
-player.encounter(:guard) do
-    encountered.add("The guard killed you")
-end
-player.encounter(:bats) do
-    encountered.add("The bats whisked you away")
-end
-player.action(:move) do |destination|
-    player.enter(destination)
-end
-for i in 1..20
-    x= Room.new(i)
-    puts "Room # #{i}: "
-    puts x.hazardRoom
-end
-# for i in 0...3
-#     puts "All Sensing blocks "
-#     Player.getBlockSense
-# end
-
-player.enter(empty_room)
-
-player.explore_room
-exit()
-sensed == Set["You hear a rustling", "You smell something terrible"]
-encountered.empty? == true
-
-# player.enter(bat_room)
-# encountered == Set["The bats whisked you away"]
-# sensed.empty? == true
-# # perform actions on neighboring rooms
-# player = Player.new
-# player.act(:move, guard_room)
-# player.room.number == guard_room.number
-# encountered == Set[“The guard killed you”]
-# sensed.empty? == true
