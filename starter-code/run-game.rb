@@ -5,6 +5,7 @@ require_relative "./hunt-treasure.rb"
 srand(ARGV[0].to_i) if ARGV[0]
 
 # World setup
+
 cave = Cave.dodecahedron
 
 cave.add_hazard(:guard, 1)
@@ -42,12 +43,11 @@ player.encounter(:bats) do
   narrator.say "Giant bats whisk you away to a new cavern!"
 
   old_room = player.room
-  puts "Just the encountering of bats"
   new_room = cave.random_room
 
   player.enter(new_room)
 
-  cave.move(:bats, old_room,  new_room)
+  cave.move(:bats, old_room, new_room)
 end
 
 player.encounter(:pit) do
@@ -84,10 +84,10 @@ player.action(:startle_guard) do |old_guard_room|
 end
 
 # Kick off the event loop
+
 player.enter(cave.entrance)
 
 narrator.tell_story do
   console.show_room_description
   console.ask_player_to_act
 end
-

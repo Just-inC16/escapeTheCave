@@ -1,22 +1,13 @@
-require_relative "./hunt-treasure.rb"
 class Console
   def initialize(player, narrator)
     @player   = player
     @narrator = narrator
   end
-  def getPlayer
-    return @player.room.number 
-  end 
+
   def show_room_description
-    # puts getPlayer 
     @narrator.say "-----------------------------------------"
     @narrator.say "You are in room #{@player.room.number}."
-    #********EXTRA************
-    # for i in 1..20
-    #   x= Room.new(i)
-    #   puts "Room # #{i}: "
-    #   puts x.hazardRoom
-    # end
+
     @player.explore_room
 
     @narrator.say "Exits go to: #{@player.room.exits.join(', ')}"
@@ -58,6 +49,7 @@ class Narrator
   end
 
   def ask(question)
+    print "#{question} "
     $stdin.gets.chomp
   end
 

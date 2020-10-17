@@ -4,6 +4,7 @@ class Room
     @@hazardRoom= []  #Determine if room i has hazards 
     # Iniitialize method
     def initialize(roomNum)
+
         @roomNum=roomNum  
     end
     #Getter for number 
@@ -27,12 +28,10 @@ class Room
     def hazardRoom
         return @@hazardRoom[self.number-1]
     end
-    # def self.hazardInRoom
-    #     return @@hazardRoom[self.number-1]
-    # end
     # Check whether room i is hazard free
     def empty?
         #Check whether any hazard exist
+        puts hazardRoom
         if !hazardRoom
             return true
         end
@@ -44,9 +43,10 @@ class Room
         temp=Set.new([haze])
         #Check whether any hazard exist ==> Assign a new set 
         if !hazardRoom
-            hazardRoom=temp
+           
+            @@hazardRoom[self.number-1]=temp
         else
-            hazardRoom.add(haze)
+            @@hazardRoom[self.number-1].add(haze)
         end
     end
 
@@ -67,39 +67,37 @@ class Room
         if !hazardRoom
             return  
         end
-        hazardRoom.delete(haze)
+        @@hazardRoom[self.number-1].delete(haze)
     end
     def connectBiDirectional(roomInstance , adj)
-        adjNeighbor= @@adjToRoom[adj.number ]
-        if !adjNeighbor
-            adjNeighbor= Set.new([roomInstance])
+        # adjNeighbor= @@adjToRoom[adj.number]
+        if !@@adjToRoom[adj.number-1 ]
+            @@adjToRoom[adj.number-1 ]= Set.new([roomInstance])
         else 
-            adjNeighbor.add(roomInstance)
+            @@adjToRoom[adj.number-1 ].add(roomInstance)
         end
     end 
     #Given the room, connect the  room
     def connect(room)
+        
         temp=Set.new([room])
+        
         #Nil arr = false
-        if !roomAdj 
-            roomAdj=temp
-            #Add bidirectionality
+        if !@@adjToRoom[self.number-1]
+            @@adjToRoom[self.number-1]=temp
+            #Add connectivity to reciprocal  list 
             connectBiDirectional(self,room)
         else  
-            roomAdj.add(room) 
-            #Add bidirectionality
+            @@adjToRoom[self.number-1].add(room)  
             connectBiDirectional(self,room)
-        end
+        end  
     end
     # Check that self.room and room are neighbors based on #s
     def neighbor(adjNeighbor)
-        #Obtain array of room adjacencies 
-        
-        for i in 0...roomAdj.length
-            roomAdjList= roomAdj.to_a[i]
-            #Check mathcing numbers 
-            if roomAdjList.number == adjNeighbor
-                return roomAdjList
+        for i in 0...@@adjToRoom[self.number-1].length
+            # puts @@adjToRoom[self.number].to_a[i]
+            if @@adjToRoom[self.number-1].to_a[i].number == adjNeighbor
+                return @@adjToRoom[self.number-1].to_a[i]
             end
         end
     end 
@@ -203,7 +201,7 @@ class Cave
         #Room 3 - 2,4,12
         @@adjToRoom[2]=Set.new([room2,room4,room12])
         #Room 4 - 3,5,14
-        @@adjToRoom[3]=Set.new([ room3,room5,room14])
+        @@adjToRoom[3]=Set.new([room3,room5,room14])
         #Room 5 - 1,4,6
         @@adjToRoom[4]=Set.new([room1,room4,room6])
         #Room 6 - 5,7,15
@@ -223,7 +221,7 @@ class Cave
         #Room 13 - 12,14,18
         @@adjToRoom[12]=Set.new([room12,room14,room18])
         #Room 14 - 4,13,15
-        @@adjToRoom[13]=Set.new([ room4,room13,room15])
+        @@adjToRoom[13]=Set.new([room4,room13,room15])
         #Room 15 - 6,14,16
         @@adjToRoom[14]=Set.new([room6,room14,room16])
         #Room 16 - 15,17,18
@@ -237,13 +235,15 @@ class Cave
         #Room 20 - 11,17,19
         @@adjToRoom[19]=Set.new([room11,room17,room19])
         return Cave.new(@@adjToRoom)
-    end
+    end 
     #Return instance of room
     def self.roomInstance(specificRoom)
+        # puts "outisde Specific Room #{specificRoom}"
         return @@ListOfRooms[specificRoom]
     end 
-    def roomInstance2(specificRoom)
-        return @@ListOfRooms[specificRoom]
+    def room(specificRoom)
+        # puts "inside Specific Room #{specificRoom}"
+        return @@ListOfRooms[specificRoom-1]
     end 
     def self.tempInstances
         return @@ListOfRooms
@@ -251,29 +251,43 @@ class Cave
     #Select room randomly 
     def random_room
         #Room numbers available 
-        rooms= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+        rooms= [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         #Obtain sample from 0 index
         chosenOne = rooms.sample(1)[0]  
-        return roomInstance2(chosenOne)
+        puts "Random Room Number  #{chosenOne}"
+        return room(chosenOne)
     end
     #Remove action from curr and add to new
     def self.move(action, currRoom, newRoom)
-        aCurRoomPos=currRoom-1
-        aCurRoomPos=newRoom-1
+        aCurRoomPos=currRoom
+        aCurRoomPos=newRoom
         #Find the class instance of currRoom
-        findCurrentRoom=roomInstance2(aCurRoomPos)
+        findCurrentRoom=room(aCurRoomPos)
         #Find the class instance of newRoom
-        findNewRoom=roomInstance2(aCurRoomPos)
+        findNewRoom=room(aCurRoomPos)
 
         findCurrentRoom.remove(action)
         findNewRoom.add(action)
-         
+    end
+    #Remove action from curr and add to new
+    def move(action, currRoom, newRoom)
+        aCurRoomPos=currRoom
+        aCurRoomPos=newRoom
+        #Find the class instance of currRoom
+        findCurrentRoom=room(aCurRoomPos)
+        #Find the class instance of newRoom
+        findNewRoom=room(aCurRoomPos)
+
+        findCurrentRoom.remove(action)
+        findNewRoom.add(action)
     end
     # Add hazard to room 
     def add_hazard(hazard, room)
-        actualRoomIndex= room-1 
+        actualRoomIndex= room 
         #Find Room Instance
-        roomToBeAdded = roomInstance2(actualRoomIndex)
+        roomToBeAdded = room(actualRoomIndex)
+        puts "#{hazard}; Room number #{roomToBeAdded.number}"
+        puts "Room Instance #{roomToBeAdded}"
         #Call Room.add(haze)
         roomToBeAdded.add(hazard)
     end
@@ -281,7 +295,7 @@ class Cave
     def room_with(hazard)
         roomHazard= []
         for room in 0...20
-            checkRoom= roomInstance2(room)
+            checkRoom= room(room)
             if checkRoom.has?(hazard)
                 #Add instances to array
                 roomHazard.append(checkRoom)
@@ -291,9 +305,10 @@ class Cave
     end
     # Choose safe room 
     def entrance
-        loop do
+        loop do 
             #Obtain a random room number
             randRoom=random_room
+            puts "Entrance #{randRoom.number}"
             if randRoom.safe?
                 #Set randRoom to Player's starting room
                 # puts "Justin chan #{randRoom.number}"
@@ -305,24 +320,30 @@ class Cave
 end
 class Player
     @@currentRoom=0
+    @@blockSenses =[]
+    @@blockEncounters=[]
     #Getter for current number 
     def room
-        puts @@currentRoom
+        # puts "Player Room #{@@currentRoom}"
         # puts @@currentRoom #This is a room
-        return Cave.roomInstance(@@currentRoom)
+        return Cave.roomInstance(@@currentRoom-1)
     end
     #Setter for current number 
     def setCurrRoomNumber(newRoom)
-        #puts "Inside Set #{newRoom}"
+        # puts "Inside Set #{newRoom}"
         @@currentRoom=newRoom
     end
     def self.setCurrentRoom(currRoom)
-      #  puts "Outside Set #{currRoom}"
+        # puts "Outside Set #{currRoom}"
         @@currentRoom=currRoom
     end
-    
-    #Determine if the hazard exist 
-    def sense(hazard)
+    def self.getRoom
+        puts "Get Room #{@@currentRoom}"
+    end
+    def getRoom
+        puts "Get Room #{@@currentRoom}"
+    end
+    def senseCallee(hazard)
         #Return the adj rooms 
         rooms = room.roomAdj.to_a
         #Check current room for hazards 
@@ -337,13 +358,20 @@ class Player
                     end 
                 }
             else
-                return false 
+                return false
             end
         else
-            return true
+            return false
         end
         #Return if no room have it 
         return false 
+    end
+    #Determine if the hazard exist 
+    def sense(hazard,&block)
+        #Store block into array 
+        @@blockSenses.append(block)
+        #Caller to sense Callee
+        senseCallee(hazard)
     end
     #Return T if encountered and F if not encountered 
     def checkPlayerHazard(hazardRoom, hazard) 
@@ -354,8 +382,7 @@ class Player
         end 
         return false 
     end 
-    #Hazard encountered? 
-    def encounter(hazard)
+    def encounterCallee(hazard )
         #Obtain the hazards in that room stored as Set 
         hazerooms = room.hazardRoom
         #No hazards in Room
@@ -365,35 +392,82 @@ class Player
         #Check whether 'hazard' exist
         checkPlayerHazard(hazerooms, hazard)
     end
+    #Hazard encountered? 
+    def encounter(hazard, &block)
+        @@blockEncounters.append(block)
+        encounterCallee(hazard)
+    end
     #Enter a new room instance 
     def enter(room) 
+        puts "Enter #{room.number}"
         #Set the current room to the new current room
         setCurrRoomNumber(room.number)
+        # puts getRoom
+        
     end   
     #Does hazard exist nearby?
     def explore_room
-        sense(:bats)
-        sense(:guards)
-        sense(:pits)
+        #Sensing 
+        # senses=[:bats,:guards,:pits]
+        # senses.each do |sense|
+        #     puts sense 
+        #     puts senseCallee(sense)
+        #     if senseCallee(sense)
+        #         location=senses.find_index(sense)
+        #         puts location
+        #         @@blockEncounters[location].call()
+        #     end
+        # end
+        #[guards , pits , bats ]
+        puts "Bats #{senseCallee(:bats)}"
+        puts "Guards #{senseCallee(:guards)}"
+        puts "Pits #{senseCallee(:pits)}"
+        if senseCallee(:bats)
+            puts @@blockEncounters[0].call()
+            @@blockEncounters[0].call()
+        end
+        if senseCallee(:guards)
+            @@blockEncounters[1].call()
+        end
+        if senseCallee(:pits)
+            @@blockEncounters[2].call()
+        end            
+        # if senseCallee(:bats)
+        #     @@blockEncounters[2].call()
+        # elsif senseCallee(:guards)
+        #     @@blockEncounters[0].call()
+        # else senseCallee(:pits)
+        #     @@blockEncounters[1].call()
+        # end  
+        # #Encounters 
+        # if senseCallee(:guards)
+        #     @@blockSenses[0].call()
+        # elsif senseCallee(:bats)
+        #     @@blockSenses[1].call()
+        # else senseCallee(:pits)
+        #     @@blockSenses[2].call()
+        # end   
     end 
     def move(room)
-        setCurrRoomNumber(room)
+        puts "Moving function #{room.number}"
+        setCurrRoomNumber(room.number)
     end 
     def shoot (room)
-        puts "Printing Nil here 4"
-        if Cave.roomInstance(room).has?(:guard)
+        # puts "Shooting #{room.number}"
+
+        if Cave.roomInstance(room.number).has?(:guard)
             return true
         else 
             return false 
         end
     end 
     def startle_guard(adjGuardToRoom)
-        puts adjGuardToRoom.class
+        # puts adjGuardToRoom.class
         #1= Stay; 2 = Move 
         options= [1,2]
         choice = options.sample(1)[0]  
         if choice == 2 
-            chosenRoom = adjRooms.sample(1)[0] 
+            chosenRoom = Room.adjRooms[adjGuardToRoom-1].sample(1)[0] 
             Cave.move(:move, adjGuardToRoom, Cave.roomInstance(chosenRoom))
         end 
     end
@@ -413,3 +487,84 @@ class Player
         end
     end 
 end
+# player = Player.new
+# empty_room = Room.new(1)
+# guard_room = Room.new(2)
+# bats_room = Room.new(3)
+# room4 = Room.new(4)
+# sensed = Set.new
+# encountered = Set.new
+# empty_room.connect(guard_room)
+# empty_room.connect(bats_room)
+# player.sense(:bats) do
+#  sensed.add("You hear a rustling")
+# end
+# player.sense(:guard) do
+#  sensed.add("You smell something terrible")
+# end
+# player.encounter(:guard) do
+#  encountered.add("The guard killed you")
+# end
+# player.encounter(:bats) do
+#  encountered.add("The bats whisked you away")
+# end
+# player.action(:move) do |destination|
+#  player.enter(destination)
+# # end
+# cave = Cave.dodecahedron
+# rooms = (1..20).map { |i| cave.room(i)}
+# rooms.each do |room| puts room.number end
+
+# rooms.each do |room|
+#     room.neighbor(room.number).count == 3
+#     room.neighbor(room.number).each { |i|
+#         puts "Room #{i}" 
+#         # room(i).neighbor(i).include?(room) == true
+#  }
+# end
+# new_room = cave.random_room
+# room = cave.random_room
+# new_room = room.neighbor(1)
+# room.has?(:pit) == true
+# new_room.has?(:pit) == false
+# cave.move(:pit, room, new_room)
+# room.has?(:pit) == false
+# new_room.has?(:pit) == true
+# puts new_room
+# cave.add_hazard(:guard, 1)
+# cave.add_hazard(:pit, 3)
+# cave.add_hazard(:bats, 3)
+# entrance = cave.entrance
+# puts entrance
+# puts entrance.safe? == true
+player = Player.new
+empty_room = Room.new(1)
+guard_room = Room.new(2)
+bats_room = Room.new(3)
+room4 = Room.new(4)
+
+sensed = Set.new
+encountered = Set.new
+empty_room.connect(guard_room)
+empty_room.connect(bats_room)
+for i in 1..20
+    x= Room.new(i)
+    puts "Room # #{i}: "
+    puts x.roomAdj
+end
+player.sense(:bats) do
+    sensed.add("You hear a rustling")
+end
+player.sense(:guard) do
+    sensed.add("You smell something terrible")
+end
+player.encounter(:guard) do
+    encountered.add("The guard killed you")
+end
+player.encounter(:bats) do
+    encountered.add("The bats whisked you away")
+end
+player.action(:move) do |destination|
+    player.enter(destination)
+end
+player.enter(empty_room)
