@@ -19,3 +19,4 @@ ruby rgrep.rb test.txt -w -m road
 ./rgrep.rb test.txt -k -w p
 ./rgrep.rb -v -m
 ./rgrep.rbtest.txt -c "\d\d"
+
