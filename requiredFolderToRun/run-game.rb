@@ -8,9 +8,9 @@ srand(ARGV[0].to_i) if ARGV[0]
 
 cave = Cave.dodecahedron
 
-cave.add_hazard(:guard, 1)
-cave.add_hazard(:pit, 3)
-cave.add_hazard(:bats, 3)
+cave.add_hazard(:guard, 5)
+# cave.add_hazard(:pit, 3)
+# cave.add_hazard(:bats, 10)
 
 # Player and narrator setup
 
@@ -73,7 +73,7 @@ end
 player.action(:startle_guard) do |old_guard_room|
   if [:move, :stay].sample == :move
     new_guard_room = old_guard_room.random_neighbor
-    cave.move(:guard, from: old_guard_room, to: new_guard_room)
+    cave.move(:guard, old_guard_room,  new_guard_room)
 
     narrator.say("You heard a rumbling in a nearby cavern.")
   end
