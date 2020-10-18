@@ -456,7 +456,6 @@ class Player
       # Obtain hazard for the room 
       hazardsInRoom = room.hazardRoom
       #Check that hazard room is not nil and has pit
-      # puts "Hazards? #{hazardsInRoom}"
       if (hazardsInRoom and hazardsInRoom.include?(:pit))
         @@blockEncounters[2].call()
       end
@@ -468,7 +467,6 @@ class Player
       end
       
       # Check for bats  
-      # puts "Current room is : #{room.number}"
       if (hazardsInRoom and hazardsInRoom.include?(:bats))
         @@blockEncounters[1].call()
       end
@@ -476,9 +474,6 @@ class Player
 
     #Does hazard exist nearby?
     def explore_room 
-        for i in 1..Room.hazardRoom.length
-            puts "Room#{i} : #{Room.new(i).hazardRoom}"
-        end
         if encounterCallee(:bats) && @@setBatTrap
             @@blockEncounters[1].call() 
             @@setBatTrap=false
