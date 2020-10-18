@@ -8,9 +8,9 @@ srand(ARGV[0].to_i) if ARGV[0]
 
 cave = Cave.dodecahedron
 
-cave.add_hazard(:guard, 5)
-# cave.add_hazard(:pit, 3)
-# cave.add_hazard(:bats, 10)
+cave.add_hazard(:guard, 1)
+cave.add_hazard(:pit, 3)
+cave.add_hazard(:bats, 3)
 
 # Player and narrator setup
 

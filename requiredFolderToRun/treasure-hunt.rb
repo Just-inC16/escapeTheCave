@@ -168,7 +168,6 @@ class Room
     end 
     def neighbor(adjNeighbor)
         for i in 0...@@adjToRoom[self.number-1].length
-            # puts @@adjToRoom[self.number].to_a[i]
             if @@adjToRoom[self.number-1].to_a[i].number == adjNeighbor
                 return @@adjToRoom[self.number-1].to_a[i]
             end
@@ -327,7 +326,6 @@ class Cave
         rooms= [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
         #Obtain sample from 0 index
         chosenOne = rooms.sample(1)[0]  
-        # puts "Random Room Number  #{room(chosenOne).number}"
         return room(chosenOne)
     end
     #Remove action from curr and add to new
@@ -351,12 +349,10 @@ class Cave
     def add_hazard(hazard, numOfRooms)
         for roomToAdd in 0...numOfRooms
             generatedRandom =random_room
-            
             #Check that the generated room has hazard or not 
             while generatedRandom.has?(hazard)
                 generatedRandom =random_room
             end
-            puts "#{hazard}; Room number #{generatedRandom.number}"
             #Call Room.add(haze)
             generatedRandom.add(hazard) 
         end
@@ -376,7 +372,6 @@ class Cave
         loop do 
             #Obtain a random room number
             randRoom=random_room
-            # puts "Entrance #{randRoom.number}"
             if randRoom.safe?
                 #Set randRoom to Player's starting room
                 Player.setCurrentRoom(randRoom.number) 
@@ -399,6 +394,7 @@ class Player
     #Store Callbacks for actions
      # Index 0: move  ,   Index 1: shoot   ,Index 2: startle_guard
     @@blockActions =[]
+    @@setBatTrap =false
     #Getter for current number 
     def room
         return Cave.roomInstance(@@currentRoom-1)
@@ -460,23 +456,21 @@ class Player
       # Obtain hazard for the room 
       hazardsInRoom = room.hazardRoom
       #Check that hazard room is not nil and has pit
+      # puts "Hazards? #{hazardsInRoom}"
       if (hazardsInRoom and hazardsInRoom.include?(:pit))
-        puts "Callback for pit"
         @@blockEncounters[2].call()
       end
       #Change room
       setCurrRoomNumber(room.number) 
       #Check that hazard room is not nil and has guard
       if (hazardsInRoom and hazardsInRoom.include?(:guard))
-        #  require 'debug'
-          puts "Callback for guards"
           @@blockEncounters[0].call()
       end
+      
       # Check for bats  
-      puts "Current room is : #{room.number}"
-      if hazardsInRoom and hazardsInRoom.include?(:bats) 
-          puts "Callback for guards"
-          @@blockEncounters[1].call()
+      # puts "Current room is : #{room.number}"
+      if (hazardsInRoom and hazardsInRoom.include?(:bats))
+        @@blockEncounters[1].call()
       end
     end   
 
@@ -484,6 +478,10 @@ class Player
     def explore_room 
         for i in 1..Room.hazardRoom.length
             puts "Room#{i} : #{Room.new(i).hazardRoom}"
+        end
+        if encounterCallee(:bats) && @@setBatTrap
+            @@blockEncounters[1].call() 
+            @@setBatTrap=false
         end
         #Sensing 
         if senseCallee(:bats)
@@ -496,24 +494,13 @@ class Player
             @@blockSenses[2].call()
         end   
     end
-
     #Player's action 
     def action(playerAction, &block)
         @@blockActions.append(block)
     end 
-
-    def startle_guard(adjGuardToRoom)
-        #1= Stay; 2 = Move 
-        options= [1,2]
-        choice = options.sample(1)[0]  
-        if choice == 2 
-            chosenRoom = Room.adjRooms[adjGuardToRoom-1].sample(1)[0] 
-            Cave.move(:move, adjGuardToRoom, Cave.roomInstance(chosenRoom))
-        end 
-    end
-    
     # Have the player act 
     def act(action, room)
+        @@setBatTrap=true
         case action.to_s
             when "move" then return @@blockActions[0].call(room)
             when "shoot" then return @@blockActions[1].call(room)
