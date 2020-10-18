@@ -57,3 +57,33 @@ puts [1,2,3,4,5].map {|n| n*n}
 # cave.entrance
 # player = Player.new
 # puts player.encounter(:bats)
+
+ # puts "Guards #{encounterCallee(:guard)}"
+        # puts ""
+        # # require 'debug'
+        # puts "Bats #{encounterCallee(:bats)}"
+        # puts ""
+       
+        # puts "Pits #{encounterCallee(:pit)}" 
+        # puts ""
+        # puts @@blockEncounters[0].call()
+        # puts @@blockEncounters[2].call()
+        # puts @@blockEncounters[1].call()
+
+
+         # if senseCallee(:guards)
+        #     @@blockSenses[0].call()
+        # elsif senseCallee(:bats)
+        #     @@blockSenses[1].call()
+        # else senseCallee(:pits)
+        #     @@blockSenses[2].call()
+        # end  
+         #Sensing 
+        # puts "Bats #{senseCallee(:bats)} "
+        # puts ""
+        # puts "Guards #{senseCallee(:guards)}"
+        # puts ""
+        # # require 'debug'
+        # puts "Pits #{senseCallee(:pit)}" 
+        # puts ""
+        # else

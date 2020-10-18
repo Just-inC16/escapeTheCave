@@ -42,7 +42,7 @@ player.encounter(:bats) do
   narrator.say "Giant bats whisk you away to a new cavern!"
 
   old_room = player.room
-  puts "Just the encountering of bats"
+
   new_room = cave.random_room
 
   player.enter(new_room)

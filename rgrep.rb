@@ -100,6 +100,7 @@ def handleM(params, option2)
 end
 #Fetch arguments in Array 
 params = ARGV
+
 #Check to see if arguments exist(Less than 2)
 if params.length ==0 or params.length == 1
     puts "Missing required arguments"

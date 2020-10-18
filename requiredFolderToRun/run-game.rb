@@ -44,7 +44,7 @@ player.encounter(:bats) do
 
   old_room = player.room
   new_room = cave.random_room
-
+  new_room = cave.random_room
   player.enter(new_room)
 
   cave.move(:bats, old_room, new_room)
