@@ -103,7 +103,15 @@ params = ARGV
 
 #Check to see if arguments exist(Less than 2)
 if params.length ==0 or params.length == 1
-    puts "Missing required arguments"
+    if params[0].class.to_s =="NilClass"
+        puts "Missing required arguments"
+    else 
+        if (params[0].length==2 and params[0][0]=='-' and params[0] !~ /\-[wpvcm]/)
+            puts "Invalid option" 
+        else
+            puts "Missing required arguments"
+        end
+    end
 #More than 2 args
 else 
     #Check if no options (default -p)
@@ -123,15 +131,27 @@ else
         end 
     #More than 2 options 
     elsif params.length >4
-         puts "Invalid combination of options"
+        #Check for invalid options
+        checkParams=[]
+        secCheckParams=[]
+        params.collect {|x| checkParams.append(x) if x.length==2 and x[0]=='-'}
+        checkParams.collect {|x| secCheckParams.append(x) if x !~ /\-[wpvcm]/}
+      
+        if (secCheckParams.length >0)
+            puts "Invalid option" 
+        end
+        puts "Invalid combination of options"
 
     #Just enough arguments     
     else
         #Only 1 option
         opt1=params[1]
 
-        if(opt1=='-c' or opt1=='-m' )
-            puts "Invalid option"
+        if(opt1=='-c')
+            pcOption(params)
+        end
+        if( opt1=='-m' )
+            pmOption(params)
         end
         if(params.length ==3 and opt1 =~ /\-[wpv]/)
             case opt1
@@ -143,7 +163,6 @@ else
                 else vOption(params)
             end
         end
-
         #2 options 
         if(params.length ==4 )#and opt1 =~ /\-[wpv]/)
             #Combine and sort 
@@ -152,8 +171,7 @@ else
             #Check for - and options to variables 
             if (sortOpt[0]=='-' and sortOpt[1]=='-' && sortOpt.length==4)
                 if(params[1]!~ /\-[wpvcm]/ or params[2]!~ /\-[wpvcm]/)
-                    puts "Invalid option"
-                
+                    puts "Invalid option"  
                 else
                     #Assign to variables 
                     opt1 = sortOpt[2]

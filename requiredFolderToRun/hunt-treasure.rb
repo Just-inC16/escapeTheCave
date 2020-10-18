@@ -477,7 +477,6 @@ class Player
             # sleep(2)
             # puts "bye3"
         end
-        
         #Sensing 
         if senseCallee(:bats)
             @@blockSenses[0].call()
@@ -488,8 +487,6 @@ class Player
         if senseCallee(:pit)
             @@blockSenses[2].call()
         end   
-           
-
     end 
     #Player's action 
     def action(playerAction, &block)
